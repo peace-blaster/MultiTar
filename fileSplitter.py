@@ -205,5 +205,5 @@ if prompt=='y':
     if method=='3':
         obj.compressFilesRar()
     obj.makeManifest()
-    #obj.cleanSubDirectories()
+    obj.cleanSubDirectories()
 print("complete!")
