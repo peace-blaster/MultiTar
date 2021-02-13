@@ -23,9 +23,27 @@ import os
 import subprocess
 import math
 import sys
+import argparse
 
-#arguments from argv
-mainPath=sys.argv[1]
+#get CLI arguments
+parser = argparse.ArgumentParser()
+parser.add_argument("-p", "--path", help="full path to target directory")
+parser.add_argument("-t", "--threads", help="Number of threads to use", type=int)
+parser.add_argument("-s", "--splits", help="Number archives to split files into", type=int)
+args=parser.parse_args()
+if not args.path:
+    print("main path not provided!")
+    quit()
+else:
+    mainPath=args.path
+if not args.threads:
+    threads=4
+else:
+    threads=args.threads
+if not args.splits:
+    splits=4
+else:
+    splits=args.splits
 
 #print initial info
 print("Target directory: ", mainPath)
@@ -160,7 +178,7 @@ class targetPath:
 
 
 #instantiate object
-obj=targetPath(splitNum=4, threads=8)
+obj=targetPath(splitNum=splits, threads=splits)
 #display some info
 print("Found "+str(obj.fileCount)+" files.")
 print("splitting into "+str(obj.splitNum)+" directories of "+str(math.floor(obj.fileCount/obj.splitNum))+" files each.")
