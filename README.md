@@ -7,7 +7,7 @@
  - `-t` or `--threads`: Number of parallel processes to use for copying and and archiving files. Default is 4.
  - `-s` or `--splits`: Number archives to split files into. Default is 4.
  
- Example usage: `python3 fileSplitter.py -p /Users/peaceblaster/Downloads/TST -t=8 -s=10`
+ Example usage: `python3 fileSplitter.py -p /Users/peaceblaster/Downloads/TST -t 8 -s 10`
 ## Notes:
  - Only supports `*nix` systems, and the `zip` and `rar` packages are required for the corresponding formats.
  - Target path cannot have subdirectories! This is to ensure evenness of package sizes, and prevent recursion issues
