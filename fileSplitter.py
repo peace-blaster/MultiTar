@@ -118,7 +118,7 @@ class targetPath:
         for i in range(self.splitNum):
             print("Starting compression for set "+str(i)+"/"+str(self.splitNum))
             #copypasta from stackexchange- idk for sure what this is doing
-            processes.add(subprocess.Popen(["zip", "-r", mainPath+"/DELIVERABLE/set"+str(i)+".zip", mainPath+"/set"+str(i)]))
+            processes.add(subprocess.Popen(["zip", "-r", "-j", mainPath+"/DELIVERABLE/set"+str(i)+".zip", mainPath+"/set"+str(i)]))
             if len(processes) >= self.threads:
                 os.wait()
                 processes.difference_update([p for p in processes if p.poll() is not None])
