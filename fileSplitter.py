@@ -154,8 +154,8 @@ class targetPath:
 #def makeTestCase(n):
 #    for i in range(n):
 #        os.system('echo "hello" >> '+str(i)+'.txt')
-os.system("rm -rf "+mainPath+"/set*")
-os.system("rm -rf "+mainPath+"/DELIVERABLE")
+#os.system("rm -rf "+mainPath+"/set*")
+#os.system("rm -rf "+mainPath+"/DELIVERABLE")
 #makeTestCase(40000)
 
 
