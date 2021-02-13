@@ -1,7 +1,7 @@
 # MultiTar
  Takes batches of files in a directory, sorts them into N directories, and then compresses those directories using either `.tar.gz`, `.zip`. or `.rar`.
 ## Description:
- Often times large numbers of files need to be sent across network, and a single compressed archive proves too large for some systems to handle. This script automates the process of partitioning up the files, and compressing them into a variable number of archives to be sent one at a time. Note that these archives are independent- they don't need to be recombined prior to unpacking like with the stock zip utility found in most Linux-based operating systems.
+ Often times large numbers of files need to be sent across network, and a single compressed archive proves too large for some systems to handle. This script automates the process of partitioning up the files, and compressing them into a variable number of archives to be sent one at a time. Note that these archives are independent- they don't need to be recombined prior to unpacking like with the stock `zip` utility found in most Linux-based operating systems.
 ## Notes:
  - Only supports `*nix` systems, and the `zip` and `rar` packages are required for the corresponding formats.
  - Target path cannot have subdirectories! This is to ensure evenness of package sizes, and prevent recursion issues
