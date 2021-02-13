@@ -5,3 +5,4 @@
 ## Notes:
  - When used CLI to make large numbers of tarballs, output can sometimes obscure the prompt in the tty after completion. Typing "clear" will fix this. I am working to resolve this issue.
  - Talk to devops/IT about appropriate amount of parallelization before use. In testing, this could easily reach 100% usage of all cores in a quad core CPU.
+ - By default, script will use 4 threads and divide files into 4 archives. This can be changed manually on line 124. CLI arguments for this may be added in the future.
