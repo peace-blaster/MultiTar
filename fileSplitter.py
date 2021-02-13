@@ -98,19 +98,45 @@ class targetPath:
                 if len(processes) >= self.threads:
                     os.wait()
                     processes.difference_update([p for p in processes if p.poll() is not None])
-    def compressFiles(self):
+    #compression methods:
+    def compressFilesTar(self):
         #Does the actualy file moving
         #iterate through target subdirectories, parallelizing copy process within each one
         processes=set()
         for i in range(self.splitNum):
             print("Starting compression for set "+str(i)+"/"+str(self.splitNum))
-            print(["tar", "-czvf", mainPath+"/DELIVERABLE/set"+str(i)+".tar.gz", mainPath+"/set"+str(i)])
             #copypasta from stackexchange- idk for sure what this is doing
             processes.add(subprocess.Popen(["tar", "-czvf", mainPath+"/DELIVERABLE/set"+str(i)+".tar.gz", mainPath+"/set"+str(i)]))
             if len(processes) >= self.threads:
                 os.wait()
                 processes.difference_update([p for p in processes if p.poll() is not None])
         #print a ton of whitespace to address bug where parallel output outruns shell and user can't see prompt after completion
+    def compressFilesZip(self):
+        #Does the actualy file moving
+        #iterate through target subdirectories, parallelizing copy process within each one
+        processes=set()
+        for i in range(self.splitNum):
+            print("Starting compression for set "+str(i)+"/"+str(self.splitNum))
+            #copypasta from stackexchange- idk for sure what this is doing
+            processes.add(subprocess.Popen(["zip", "-r", mainPath+"/DELIVERABLE/set"+str(i)+".zip", mainPath+"/set"+str(i)]))
+            if len(processes) >= self.threads:
+                os.wait()
+                processes.difference_update([p for p in processes if p.poll() is not None])
+        #print a ton of whitespace to address bug where parallel output outruns shell and user can't see prompt after completion
+    def compressFilesRar(self):
+        #Does the actualy file moving
+        #iterate through target subdirectories, parallelizing copy process within each one
+        processes=set()
+        for i in range(self.splitNum):
+            print("Starting compression for set "+str(i)+"/"+str(self.splitNum))
+            #copypasta from stackexchange- idk for sure what this is doing
+            #"q" should suppress output so it isn't annoying like with the tarball method
+            processes.add(subprocess.Popen(["rar", "a", mainPath+"/DELIVERABLE/set"+str(i)+".rar", mainPath+"/set"+str(i)]))
+            if len(processes) >= self.threads:
+                os.wait()
+                processes.difference_update([p for p in processes if p.poll() is not None])
+        #print a ton of whitespace to address bug where parallel output outruns shell and user can't see prompt after completion
+    #ending tasks:
     def makeManifest(self):
         #make manifests for each archive
         for i in range(self.splitNum):
@@ -121,27 +147,45 @@ class targetPath:
             filelink.close()
     def cleanSubDirectories(self):
         #remove all the subdirectories now that we have archives
-        os.system("rm -rf "+mainPath+"/set*")
+        for i in range(self.splitNum):
+            os.system("rm -rf "+mainPath+"/set"+str(i))
 
 #used for development- ignore this
 #def makeTestCase(n):
 #    for i in range(n):
 #        os.system('echo "hello" >> '+str(i)+'.txt')
-#os.system("rm -rf "+mainPath+"/set*")
-#os.system("rm -rf "+mainPath+"/DELIVERABLE")
+os.system("rm -rf "+mainPath+"/set*")
+os.system("rm -rf "+mainPath+"/DELIVERABLE")
 #makeTestCase(40000)
 
 
 #instantiate object
-obj=targetPath(splitNum=40, threads=8)
+obj=targetPath(splitNum=4, threads=8)
 #display some info
 print("Found "+str(obj.fileCount)+" files.")
 print("splitting into "+str(obj.splitNum)+" directories of "+str(math.floor(obj.fileCount/obj.splitNum))+" files each.")
 prompt=input("Proceed? (y/n) ")
 if prompt=='y':
+    loop=True
+    method=''
+    while loop==True:
+        prompt=input("Select compression method:\n 1.) .tar.gz\n 2.) .zip (requires 'zip' package- DO NOT USE WITHOUT)\n 3.) .rar (requires 'rar' package- DO NOT USE WITHOUT)\n 4.) quit\n")
+        if prompt not in ['1','2','3','4']:
+            print("invalid selection!")
+        else:
+            method=prompt
+            loop=False
+            if method=='4':
+                quit()
     obj.makeFileLists()
     obj.makeSubdirectories()
     obj.moveFiles()
-    obj.compressFiles()
+    if method=='1':
+        obj.compressFilesTar()
+    if method=='2':
+        obj.compressFilesZip()
+    if method=='3':
+        obj.compressFilesRar()
     obj.makeManifest()
+    #obj.cleanSubDirectories()
 print("complete!")
