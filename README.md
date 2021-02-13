@@ -11,7 +11,7 @@
 ## Notes:
  - Only supports `*nix` systems, and the `zip` and `rar` packages are required for the corresponding formats.
  - Target path cannot have subdirectories! This is to ensure evenness of package sizes, and prevent recursion issues
- - Script will make a directory called "DELIVERABLE" containing all archives and manifests.
+ - Script will make a directory called `DELIVERABLE` containing all archives and manifests.
  - Talk to devops/IT about appropriate amount of parallelization before use. In testing, this could easily reach 100% usage of all cores in a quad core CPU.
  - By default, script will use 4 threads and divide files into 4 archives.
 ## Known Bugs:
