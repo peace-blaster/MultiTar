@@ -76,9 +76,11 @@ class targetPath:
         if not self.fileSplit:
             raise RuntimeError("self.fileSplit not created yet")
             return 0
+        #make containing directory for the deliverable:
+        os.system("mkdir "+mainPath+"/DELIVERABLE")
         for i in range(self.splitNum):
             try:
-                os.system("mkdir set"+str(i))
+                os.system("mkdir "+mainPath+"/set"+str(i))
             except:
                 raise RuntimeError("Unable to create directory")
                 print("Unable to create directory 'set"+str(i)+"', quitting")
@@ -92,7 +94,7 @@ class targetPath:
             processes=set()
             for f in self.fileSplit[i]:
                 #copypasta from stackexchange- idk for sure what this is doing
-                processes.add(subprocess.Popen(["cp", mainPath+f, "set"+str(i)]))
+                processes.add(subprocess.Popen(["cp", mainPath+"/"+f, mainPath+"/set"+str(i)]))
                 if len(processes) >= self.threads:
                     os.wait()
                     processes.difference_update([p for p in processes if p.poll() is not None])
@@ -102,26 +104,36 @@ class targetPath:
         processes=set()
         for i in range(self.splitNum):
             print("Starting compression for set "+str(i)+"/"+str(self.splitNum))
+            print(["tar", "-czvf", mainPath+"/DELIVERABLE/set"+str(i)+".tar.gz", mainPath+"/set"+str(i)])
             #copypasta from stackexchange- idk for sure what this is doing
-            processes.add(subprocess.Popen(["tar", "-czvf", "set"+str(i)+".tar.gz", "set"+str(i)]))
+            processes.add(subprocess.Popen(["tar", "-czvf", mainPath+"/DELIVERABLE/set"+str(i)+".tar.gz", mainPath+"/set"+str(i)]))
             if len(processes) >= self.threads:
                 os.wait()
-                os.system("clear")
                 processes.difference_update([p for p in processes if p.poll() is not None])
         #print a ton of whitespace to address bug where parallel output outruns shell and user can't see prompt after completion
-        os.system("clear")
-        quit()
+    def makeManifest(self):
+        #make manifests for each archive
+        for i in range(self.splitNum):
+            print("Creating manifest for set"+str(i))
+            filelink=open(mainPath+"/DELIVERABLE/set"+str(i)+"_file_list.txt","w+")
+            for f in self.fileSplit[i]:
+                filelink.write(f+"\n")
+            filelink.close()
+    def cleanSubDirectories(self):
+        #remove all the subdirectories now that we have archives
+        os.system("rm -rf "+mainPath+"/set*")
 
 #used for development- ignore this
 #def makeTestCase(n):
 #    for i in range(n):
 #        os.system('echo "hello" >> '+str(i)+'.txt')
-#os.system("rm -rf set*")
+#os.system("rm -rf "+mainPath+"/set*")
+#os.system("rm -rf "+mainPath+"/DELIVERABLE")
 #makeTestCase(40000)
 
 
 #instantiate object
-obj=targetPath(splitNum=40, threads=32)
+obj=targetPath(splitNum=40, threads=8)
 #display some info
 print("Found "+str(obj.fileCount)+" files.")
 print("splitting into "+str(obj.splitNum)+" directories of "+str(math.floor(obj.fileCount/obj.splitNum))+" files each.")
@@ -131,4 +143,5 @@ if prompt=='y':
     obj.makeSubdirectories()
     obj.moveFiles()
     obj.compressFiles()
+    obj.makeManifest()
 print("complete!")
