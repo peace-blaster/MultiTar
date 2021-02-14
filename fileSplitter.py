@@ -116,6 +116,7 @@ class targetPath:
                 if len(processes) >= self.threads:
                     os.wait()
                     processes.difference_update([p for p in processes if p.poll() is not None])
+        os.wait() #to prevent overlap issues
     #compression methods:
     def compressFilesTar(self):
         #Does the actualy file moving
@@ -129,6 +130,7 @@ class targetPath:
                 os.wait()
                 processes.difference_update([p for p in processes if p.poll() is not None])
         #print a ton of whitespace to address bug where parallel output outruns shell and user can't see prompt after completion
+        os.wait() #to prevent overlap issues
     def compressFilesZip(self):
         #Does the actualy file moving
         #iterate through target subdirectories, parallelizing copy process within each one
@@ -141,6 +143,7 @@ class targetPath:
                 os.wait()
                 processes.difference_update([p for p in processes if p.poll() is not None])
         #print a ton of whitespace to address bug where parallel output outruns shell and user can't see prompt after completion
+        os.wait() #to prevent overlap issues
     def compressFilesRar(self):
         #Does the actualy file moving
         #iterate through target subdirectories, parallelizing copy process within each one
@@ -154,6 +157,7 @@ class targetPath:
                 os.wait()
                 processes.difference_update([p for p in processes if p.poll() is not None])
         #print a ton of whitespace to address bug where parallel output outruns shell and user can't see prompt after completion
+        os.wait() #to prevent overlap issues
     #ending tasks:
     def makeManifest(self):
         #make manifests for each archive
