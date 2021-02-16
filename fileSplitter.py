@@ -187,7 +187,7 @@ obj=targetPath(splitNum=splits, threads=splits)
 print("Found "+str(obj.fileCount)+" files.")
 print("splitting into "+str(obj.splitNum)+" directories of "+str(math.floor(obj.fileCount/obj.splitNum))+" files each.")
 prompt=input("Proceed? (y/n) ")
-if prompt=='y':
+if prompt.lowercase()=='y':
     loop=True
     method=''
     while loop==True:
