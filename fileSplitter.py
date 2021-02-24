@@ -32,18 +32,24 @@ parser.add_argument("-t", "--threads", help="Number of threads to use", type=int
 parser.add_argument("-s", "--splits", help="Number archives to split files into", type=int)
 args=parser.parse_args()
 if not args.path:
+    help()
     print("main path not provided!")
     quit()
 else:
     mainPath=args.path
 if not args.threads:
+    print("Defaulting to 4 threads")
     threads=4
 else:
     threads=args.threads
 if not args.splits:
+    print("Defaulting to 4 archives")
     splits=4
 else:
     splits=args.splits
+
+def help():
+    #print some helpful stuff
 
 #print initial info
 print("Target directory: ", mainPath)
