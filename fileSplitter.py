@@ -18,8 +18,6 @@
 ##                                                                       ##
 ###########################################################################
 
-#/Users/peaceblaster/Library/Mobile Documents/com~apple~CloudDocs/CODE/FILE_SPLIT_COPY/MultiTar
-
 #imports
 import os
 import subprocess
