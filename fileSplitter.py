@@ -138,11 +138,10 @@ class targetPath:
                 if len(processes) >= self.threads:
                     os.wait()
                     processes.difference_update([p for p in processes if p.poll() is not None])
-                print('waiting for child processes to complete...')
-                for p in processes:
-                    p.communicate()
-                    p.wait()
-                x=os.popen('echo ""').read()
+            for p in processes:
+                p.communicate()
+                p.wait()
+            x=os.popen('echo ""').read()
         #I'm VERY tired of the system ignoring os.wait(), doing this instead:
         print('waiting for child processes to complete...')
         for p in processes:
