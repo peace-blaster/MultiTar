@@ -151,10 +151,12 @@ class targetPath:
         x=os.popen('echo ""').read()
 
     def makeFileLists_size(self):
+        print('Getting file sizes...')
         #make a list of dicts with file name and size
         for filename in self.files:
             self.fileSizes[filename]=os.path.getsize(mainPath+'/'+filename)
         #the matching algorithm: it's ineligant, but given it's not yet moving anything, this should be ok:
+        print('Sorting into optimal size archives...')
         currentItem=0
         currentItemSize=0
         self.fileSplit=[[]]
