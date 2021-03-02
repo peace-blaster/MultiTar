@@ -63,7 +63,7 @@ def help():
 #print initial info
 print("Target directory: ", mainPath)
 
-class targetPath:
+class fileSplitter:
     #########################
     # setup and validation: #
     #########################
