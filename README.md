@@ -10,7 +10,7 @@
  - `-s` or `--splits`: Number archives to split files into. Cannot be used in conjunction with `-S`.
  - `-S` or `--splitsize`: Size of archives to create (GB). Cannot be used in conjunction with `-s`.
  
- Example usage: `python3 fileSplitter.py -p /Users/peaceblaster/Downloads/TST -t 8 -S 10` will partition the files found at `/Users/peaceblaster/Downloads/TST` into 10GB archives (unknown how many it will produce).
+ Example usage: `python3 fileSplitter.py -p /Users/peaceblaster/Downloads/TST -t 8 -S 10` will partition the files found at `/Users/peaceblaster/Downloads/TST` into 10GB archives (unknown how many it will produce) using 8 child processes.
  
 ## Notes:
  - Only supports `*nix` systems, and the `zip` and `rar` packages are required for the corresponding formats.
