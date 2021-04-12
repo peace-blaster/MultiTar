@@ -67,8 +67,8 @@ class fileSplitter:
     #########################
     # setup and validation: #
     #########################
-    def __init__(self, splitNum=2, threads=4):
-        if not self.validatePath():
+    def __init__(self, splitNum=2, threads=4, mainPath=mainPath):
+        if not self.validatePath(mainPath):
             raise ValueError("Path provided is invalid")
             print("Path provided is invalid, quitting")
             quit()
@@ -85,7 +85,8 @@ class fileSplitter:
         self.subDirExists=False
         self.numArchives=0
         self.fileSizes={}
-    def validatePath(self):
+        self.mainPath=mainPath
+    def validatePath(self, mainPath):
         #ensures path is valid on host OS
         if os.path.exists(mainPath):
             return True
@@ -115,10 +116,10 @@ class fileSplitter:
             raise RuntimeError("self.numArchives not created yet")
             return 0
         #make containing directory for the deliverable:
-        os.system("mkdir "+mainPath+"/DELIVERABLE")
+        os.system("mkdir "+self.mainPath+"/DELIVERABLE")
         for i in range(self.numArchives):
             try:
-                os.system("mkdir "+mainPath+"/set"+str(i))
+                os.system("mkdir "+self.mainPath+"/set"+str(i))
             except:
                 raise RuntimeError("Unable to create directory")
                 print("Unable to create directory 'set"+str(i)+"', quitting")
@@ -134,7 +135,7 @@ class fileSplitter:
             for f in self.fileSplit[i]:
                 print(f)
                 #copypasta from stackexchange- idk for sure what this is doing
-                processes.add(subprocess.Popen(["cp", mainPath+"/"+f, mainPath+"/set"+str(i)]))
+                processes.add(subprocess.Popen(["cp", self.mainPath+"/"+f, self.mainPath+"/set"+str(i)]))
                 if len(processes) >= self.threads:
                     os.wait()
                     processes.difference_update([p for p in processes if p.poll() is not None])
@@ -153,7 +154,7 @@ class fileSplitter:
         print('Getting file sizes...')
         #make a list of dicts with file name and size
         for filename in self.files:
-            self.fileSizes[filename]=os.path.getsize(mainPath+'/'+filename)
+            self.fileSizes[filename]=os.path.getsize(self.mainPath+'/'+filename)
         #the matching algorithm: it's ineligant, but given it's not yet moving anything, this should be ok:
         print('Sorting into optimal size archives...')
         currentItem=0
@@ -190,7 +191,7 @@ class fileSplitter:
         for i in range(self.numArchives):
             print("Starting compression for set "+str(i)+"/"+str(self.numArchives))
             #copypasta from stackexchange- idk for sure what this is doing
-            processes.add(subprocess.Popen(["tar", "-czvf", mainPath+"/DELIVERABLE/set"+str(i)+".tar.gz", mainPath+"/set"+str(i)]))
+            processes.add(subprocess.Popen(["tar", "-czvf", self.mainPath+"/DELIVERABLE/set"+str(i)+".tar.gz", self.mainPath+"/set"+str(i)]))
             if len(processes) >= self.threads:
                 os.wait()
                 processes.difference_update([p for p in processes if p.poll() is not None])
@@ -206,7 +207,7 @@ class fileSplitter:
         for i in range(self.numArchives):
             print("Starting compression for set "+str(i)+"/"+str(self.numArchives))
             #copypasta from stackexchange- idk for sure what this is doing
-            processes.add(subprocess.Popen(["zip", "-r", "-j", mainPath+"/DELIVERABLE/set"+str(i)+".zip", mainPath+"/set"+str(i)]))
+            processes.add(subprocess.Popen(["zip", "-r", "-j", self.mainPath+"/DELIVERABLE/set"+str(i)+".zip", self.mainPath+"/set"+str(i)]))
             if len(processes) >= self.threads:
                 os.wait()
                 processes.difference_update([p for p in processes if p.poll() is not None])
@@ -223,7 +224,7 @@ class fileSplitter:
             print("Starting compression for set "+str(i)+"/"+str(self.numArchives))
             #copypasta from stackexchange- idk for sure what this is doing
             #"q" should suppress output so it isn't annoying like with the tarball method
-            processes.add(subprocess.Popen(["rar", "a", mainPath+"/DELIVERABLE/set"+str(i)+".rar", mainPath+"/set"+str(i)]))
+            processes.add(subprocess.Popen(["rar", "a", self.mainPath+"/DELIVERABLE/set"+str(i)+".rar", self.mainPath+"/set"+str(i)]))
             if len(processes) >= self.threads:
                 os.wait()
                 processes.difference_update([p for p in processes if p.poll() is not None])
@@ -237,14 +238,14 @@ class fileSplitter:
         #make manifests for each archive
         for i in range(self.numArchives):
             print("Creating manifest for set"+str(i))
-            filelink=open(mainPath+"/DELIVERABLE/set"+str(i)+"_file_list.txt","w+")
+            filelink=open(self.mainPath+"/DELIVERABLE/set"+str(i)+"_file_list.txt","w+")
             for f in self.fileSplit[i]:
                 filelink.write(f+"\n")
             filelink.close()
     def cleanSubDirectories(self):
         #remove all the subdirectories now that we have archives
         for i in range(self.numArchives):
-            os.system("rm -rf "+mainPath+"/set"+str(i))
+            os.system("rm -rf "+self.mainPath+"/set"+str(i))
 
 #used for development- ignore this
 #def makeTestCase(n):
@@ -257,9 +258,9 @@ class fileSplitter:
 
 #instantiate object
 if splits:
-    obj=targetPath(splitNum=splits, threads=threads)
+    obj=fileSplitter(splitNum=splits, threads=threads)
 else:
-    obj=targetPath(threads=threads)
+    obj=fileSplitter(threads=threads)
 #display some info
 print("Found "+str(obj.fileCount)+" files.")
 prompt=input("Proceed? (y/n) ")
